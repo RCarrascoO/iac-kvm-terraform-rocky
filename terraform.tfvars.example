@@ -1,0 +1,14 @@
+rocky_iso_path         = ""
+iso_filename           = "Rocky-9.7-x86_64-dvd.iso"
+institucional_username = "nombre.apellido"
+
+# Opcional: si usas otros valores, descomenta y ajusta.
+# vm_name        = "lab1-rocky9"
+# vm_memory_mb   = 2048
+# vm_vcpu        = 1
+# vm_disk_size_bytes = 25769803776
+# storage_pool   = "lab1pool"
+# storage_pool_path = "/var/lib/libvirt/images"
+# network_name   = "default"
+# libvirt_uri    = "qemu:///system"
+# libvirt_uri    = "qemu:///session"
