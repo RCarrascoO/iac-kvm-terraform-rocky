@@ -3,7 +3,7 @@ resource "libvirt_domain" "rocky_vm" {
   memory = var.vm_memory_mb
   vcpu   = var.vm_vcpu
 
-  # Firmware UEFI exigido por la evaluacion.
+  # Configuracion UEFI
   firmware = "/usr/share/edk2/ovmf/OVMF_CODE.fd"
 
   nvram {
@@ -23,7 +23,7 @@ resource "libvirt_domain" "rocky_vm" {
     volume_id = libvirt_volume.rocky_disk.id
   }
 
-  # ISO del instalador Rocky Linux 9.x.
+  # Medio de instalacion
   disk {
     volume_id = libvirt_volume.rocky_iso.id
   }

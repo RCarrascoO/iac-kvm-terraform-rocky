@@ -1,6 +1,6 @@
 # Laboratorio 1 - Terraform + QEMU/KVM (Rocky Linux 9.x)
 
-Proyecto de despliegue automatizado de VM para la evaluacion de IaC, ejecutado en Fedora 43 con Terraform y libvirt.
+Proyecto de despliegue automatizado de Infraestructura como Código (IaC), ejecutado en Fedora 43 con Terraform y libvirt.
 
 ## Objetivo
 
@@ -17,7 +17,7 @@ Desplegar una VM con los siguientes requerimientos:
 ## Estado actual del laboratorio
 
 - VM objetivo: `lab1-rocky9-renato-v2`
-- Usuario solicitado para instalar dentro de Rocky: `renato.carrasco`
+- Usuario configurado en el sistema: `renato.carrasco`
 - ISO usada: `./iso/Rocky-9.7-x86_64-minimal.iso` (relativa a la raiz del proyecto)
 - Despliegue probado y funcional por `qemu:///session` con socket de sesion.
 
@@ -32,17 +32,18 @@ Desplegar una VM con los siguientes requerimientos:
 - GUIA_LIMPIEZA_TOTAL.md
 - GUIA_INICIO_APAGADO_VM.md
 
-## Bitacora paso a paso (lo realizado)
+## Proceso de despliegue
 
-1. Se creo la base Terraform con provider libvirt y recursos para pool, volumen y dominio.
-2. Se parametrizaron recursos para cumplir rubrica: 2 GB RAM, 1 vCPU, 24 GB disco, UEFI.
-3. Se incorporo Rocky ISO y nombre de usuario solicitado en variables.
-4. Se valido sintaxis con `terraform fmt` y `terraform validate`.
-5. Se ejecuto despliegue con `terraform plan` y `terraform apply`.
-6. Se ajusto salida grafica a VNC por compatibilidad de QEMU local.
-7. Se validaron detalles de VM con `virsh` (CPU y memoria correctas).
-8. Se dejo la VM en ejecucion para continuar instalacion de Rocky y evidencia.
-9. Se cambio la ISO de DVD a Minimal (1.5GB) para acelerar los tiempos de despliegue en video.
+1. Configuracion base de Terraform con provider libvirt y definición de recursos.
+2. Parametrizacion de recursos de infraestructura: 2 GB RAM, 1 vCPU, 24 GB de disco y arranque UEFI.
+3. Incorporacion de variables para Rocky Linux ISO y gestion de usuarios. 
+# Esto se realiza durante la instalacion 
+4. Validacion de sintaxis mediante `terraform fmt` y `terraform validate`.
+5. Ejecucion del despliegue con los comandos `terraform plan` y `terraform apply`.
+6. Ajuste en la salida grafica utilizando VNC para compatibilidad local con QEMU.
+7. Verificacion de la instancia con `virsh` (revision de carga de vCPU y memoria).
+8. Acceso a la instalacion de Rocky via consola grafica.
+9. Reemplazo de ISO en formato DVD a la version Minimal (1.5GB) para optimizar los tiempos de provisionamiento.
 
 ## Problemas encontrados y soluciones aplicadas
 
@@ -66,15 +67,20 @@ Desplegar una VM con los siguientes requerimientos:
 - Causa: firmware UEFI no definido correctamente en el dominio.
 - Solucion aplicada: firmware explicito con OVMF y bloque `nvram`.
 
-6. Tiempos de despliegue excesivos (Terraform colgado copiando ISO):
+5. Tiempos de despliegue excesivos (Terraform colgado copiando ISO):
 
 - Causa: ISO completa pesaba 13GB tardando varios minutos en local.
 - Solucion aplicada: cambio a Rocky Linux Minimal ISO (1.5GB) reduciendo el tiempo a 10 segundos.
 
-5. Error 127 al abrir visor grafico:
+6. Error 127 al abrir visor grafico:
 
 - Causa: `virt-viewer` no instalado en algunos intentos.
 - Solucion aplicada: documentado `sudo dnf install -y virt-viewer` y alternativa `virt-manager`.
+
+7. Error de Storage Pool ('already exists'):
+
+- Causa: Terraform pierde el estado pero libvirt mantiene registrado en el host (`qemu:///system`) un disco o pool de nombre idéntico de anteriores pruebas interrumpiendo el despliegue de root a user (`session`).
+- Solucion aplicada: Ejecutar limpieza forzada directa en libvirt del sistema subyacente usando `sudo virsh -c qemu:///system pool-destroy ...` (documentado en guías).
 
 ## Como iniciar, usar y apagar la VM (guia operativa)
 
@@ -130,13 +136,13 @@ El menu permite:
 
 Ver guia completa en `GUIA_LIMPIEZA_TOTAL.md`.
 
-## Guia especifica de deploy con Terraform
+## Guia de despliegue con Terraform
 
-Para el punto 2 de la rubrica (despliegue con Terraform), usar:
+Para ver el paso a paso de construccion de los recursos, usar:
 
 - `GUIA_DEPLOY_TERRAFORM.md`
 
-## Instalacion de Rocky Linux y evidencia
+## Chequeo inicial post-instalacion
 
 Durante instalacion crear usuario:
 
@@ -150,14 +156,7 @@ cat /etc/os-release
 
 Debe mostrar Rocky Linux 9.x.
 
-## Guion corto para video (maximo 2 minutos)
-
-1. Mostrar archivos Terraform del proyecto.
-2. Mostrar despliegue (`terraform apply`).
-3. Mostrar login con usuario `renato.carrasco`.
-4. Ejecutar `cat /etc/os-release`.
-
-## Empaquetado de entrega
+## Empaquetado del proyecto
 
 ```bash
 tar -czvf nombre-apellido-lab1.tar.gz Sistemas_Proyecto_1

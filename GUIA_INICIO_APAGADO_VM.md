@@ -1,14 +1,9 @@
-# Guia de inicio, uso y apagado de la VM
+# Guia de inicio, uso y apagado de la VM (Via Terminal)
+# Esta guia esta pensada unicamente para iniciar la VM, no tiene que ver con Terraform o derivados (Busca iniciar la vm via terminal o visualmente), por lo que puede tener comandos "inestables" o "inutiles" para el flujo actual del trabajo.
 
-Esta guia corresponde al flujo operativo diario de la VM `lab1-rocky9-renato-v2`.
+Esta guia corresponde al flujo operativo diario de la VM `lab1-rocky9-renato-v2` desplegada mediante Terraform.
 
-Modo recomendado para evitar sudo constante: `qemu:///session`.
-
-Si usas el runbook, ejecutar con bash (no con `sudo sh`):
-
-```bash
-bash lab1_runbook.sh
-```
+Modo recomendado y configurado para evitar `sudo` constante: `qemu:///session`.
 
 ## 1) Verificar estado de la VM
 

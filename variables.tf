@@ -1,5 +1,5 @@
 variable "libvirt_uri" {
-  description = "URI de conexion a libvirt. qemu:///system requiere permisos del grupo libvirt."
+  description = "URI de conexion al hypervisor (por defecto modo usario para evitar sudo)"
   type        = string
   default     = "qemu:///session"
 }
@@ -53,7 +53,7 @@ variable "network_name" {
 }
 
 variable "rocky_iso_path" {
-  description = "Ruta absoluta opcional al ISO de Rocky Linux 9.x. Si queda vacia, se usa ./iso/<iso_filename>."
+  description = "Ruta personalizada de la ISO. Si queda en blanco se busca en ./iso"
   type        = string
   default     = ""
 }
@@ -61,10 +61,10 @@ variable "rocky_iso_path" {
 variable "iso_filename" {
   description = "Nombre del archivo ISO dentro de la carpeta ./iso del proyecto"
   type        = string
-  default     = "Rocky-9.7-x86_64-dvd.iso"
+  default     = "Rocky-9.7-x86_64-minimal.iso"
 }
 
 variable "institucional_username" {
-  description = "Usuario requerido por la evaluacion (correo institucional sin ano de ingreso)."
+  description = "Nombre de usuario del estudiante (correo institucional sin el @...)"
   type        = string
 }

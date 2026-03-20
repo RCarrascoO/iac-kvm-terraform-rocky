@@ -1,10 +1,10 @@
-# Guia de deploy con Terraform (enfocada a rubrica)
+# Guia de deploy con Terraform (Paso a paso funcional)
 
-Esta guia cubre especificamente el despliegue de la VM usando Terraform para evidenciar el punto 2 de la rubrica.
+Esta guia cubre especificamente el despliegue de la VM usando Terraform de manera reproducible.
 
 ## Objetivo de esta guia
 
-Demostrar, de forma reproducible, que la infraestructura se despliega con Terraform.
+Levantar la infraestructura completa partiendo desde cero usando IaC.
 
 ## Requisitos previos
 
@@ -108,6 +108,24 @@ sudo virsh -c qemu:///system undefine lab1-rocky9-renato-v2 || true
 
 Resolver (opcion B): usar otro `vm_name` en `terraform.tfvars`.
 
+---
+
+Si aparece este error al crear el pool:
+
+`Error: storage pool 'lab1pool-renato-session-v2' already exists`
+
+Significa que Terrafrom perdió el estado local pero el pool fantasma quedó registrado de intentos anteriores como administrador del host.
+
+Resolver (Eliminar pool huérfano):
+
+```bash
+sudo virsh -c qemu:///system pool-destroy lab1pool-renato-session-v2 || true
+sudo virsh -c qemu:///system pool-undefine lab1pool-renato-session-v2 || true
+```
+Y luego volver a ejecutar `terraform apply -auto-approve`.
+
+---
+
 Si quedaste en bucle por state desalineado (Terraform dice que existe algo, pero libvirt no):
 
 ```bash
@@ -140,9 +158,9 @@ virsh -c qemu:///session dominfo lab1-rocky9-renato-v2
 
 En `dominfo` debe verse 1 CPU y memoria 2 GB (2097152 KiB).
 
-## Evidencia recomendada para el video (punto 2 rubrica)
+## Flujo de demostracion agil
 
-Para demostrar "despliegue de la maquina virtual utilizando Terraform", muestra en este orden:
+Para correr y chequear rápidamente todo el despliegue para una presentacion o prueba:
 
 1. Archivos Terraform del proyecto.
 2. `terraform init`
@@ -151,7 +169,7 @@ Para demostrar "despliegue de la maquina virtual utilizando Terraform", muestra 
 5. `terraform apply -auto-approve`
 6. `virsh -c qemu:///session list --all`
 
-Con eso queda acreditado que la VM fue desplegada por Terraform.
+Con eso queda demostrado el despliegue íntegro de la máquina virtual mediante Terraform.
 
 ## Comandos utiles de apoyo
 
